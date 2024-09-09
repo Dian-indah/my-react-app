@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import Button from "../components/Elements/Button";
 import CardProduct from "../components/Fragments/CardProduct";
 import Counter from "../components/Fragments/Counter";
@@ -80,6 +80,14 @@ useEffect(() => {
     // ]);
   };
 
+  //useRef
+  const cartRef = useRef(JSON.parse(localStorage.getItem("cart")) || []);
+
+  const handleAddToCartRef = (id) => {
+    cartRef.current = [...cartRef.current, {id, qty:1}];
+    localStorage.setItem("cart",JSON.stringify(cartRef.current));
+  }
+
   return (
     <Fragment>
       <div className="flex justify-end h-20 bg-blue-600 text-white items-center px-10">
@@ -99,7 +107,7 @@ useEffect(() => {
               <CardProduct.Footer
                 price={product.price}
                 id={product.id}
-                handleAddToCart={handleAddToCart}
+                handleAddToCart={handleAddToCartRef}
               />
             </CardProduct>
           ))}
@@ -116,7 +124,7 @@ useEffect(() => {
               </tr>
             </thead>
             <tbody>
-              {cart.map((item) => {
+              {cartRef.current.map((item) => {
                 const product = products.find(
                   (product) => product.id === item.id
                 );
@@ -144,7 +152,7 @@ useEffect(() => {
                   </tr>
                 );
               })}
-              <tr>
+              {/* <tr>
                 <td colSpan={3}>
                   <b>Total Price</b>
                 </td>
@@ -156,7 +164,7 @@ useEffect(() => {
                     })}
                   </b>
                 </td>
-              </tr>
+              </tr> */}
             </tbody>
           </table>
         </div>
